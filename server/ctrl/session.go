@@ -429,6 +429,7 @@ func SessionAuthMiddleware(ctx *App, res http.ResponseWriter, req *http.Request)
 			mappingToUse[k] = b.String()
 		}
 		mappingToUse["timestamp"] = time.Now().Format(time.RFC3339)
+		mappingToUse["public_ip"] = GetPublicIp(req)
 		return mappingToUse, nil
 	}(templateBind)
 	if err != nil {
@@ -500,4 +501,12 @@ func applyCookieRules(cookie *http.Cookie, req *http.Request) *http.Cookie {
 func applyCookieSameSiteRule(cookie *http.Cookie, sameSiteValue http.SameSite) *http.Cookie {
 	cookie.SameSite = sameSiteValue
 	return cookie
+}
+
+func GetPublicIp(req *http.Request) string {
+	if req.Header.Get("X-Forwarded-For") != "" {
+		return req.Header.Get("X-Forwarded-For")
+	} else {
+		return req.RemoteAddr
+	}
 }
