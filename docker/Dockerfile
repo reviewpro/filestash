@@ -12,6 +12,7 @@ COPY --from=builder_prepare /home/filestash/ .
 RUN apt-get update > /dev/null && \
     apt-get install -y curl make > /dev/null 2>&1 && \
     apt-get install -y libjpeg-dev libtiff-dev libpng-dev libwebp-dev libraw-dev libheif-dev libgif-dev libvips-dev > /dev/null 2>&1 && \
+    rm -f test_file_security.go && \
     make init && \
     make build && \
     mkdir -p ./dist/data/state/config/ && \
